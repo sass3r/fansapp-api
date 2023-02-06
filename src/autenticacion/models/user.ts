@@ -1,17 +1,10 @@
-class User {
+import UserInterface from "./user.interface";
 
+class User implements UserInterface {
     constructor( 
-        private email: String,
-        private password: String
+        public email: string,
+        public password: string,
     ) {}
-
-    getEmail() {
-        return this.email;
-    }
-
-    getPassword() {
-        return this.password;
-    }
 }
 
 export default User;

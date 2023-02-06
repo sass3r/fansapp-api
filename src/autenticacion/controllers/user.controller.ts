@@ -6,42 +6,51 @@ import { Request } from 'express';
 class UserController {
     constructor(private userService: UserService) {}
 
-    getAll(req: Request, res: Response) {
-        const users: [] = this.userService.getAll();
-        return res.status(200).json({ users });
+    async getAll(req: Request, res: Response) {
+        const users: never[] = await this.userService.getAll();
+        return res.status(200).json(users);
     }
 
-    save(req: Request, res: Response) {
+    async save(req: Request, res: Response) {
         const body = req.body;
         const email = body.email;
         const password = body.password;
         const user = new User(email,password);
 
-        const result = this.userService.save(user);
-        return res.status(200).json({ result });
+        const userCreated = await this.userService.save(user);
+        return res.status(200).json(userCreated);
     }
 
-    findOne(req: Request, res: Response) {
-        const id: number = parseInt(req.params.id);
-        const user = this.userService.findOne(id);
-        return res.status(200).json({ user });
+    async findOne(req: Request, res: Response) {
+        const id: string = req.params.id;
+        const user = await this.userService.findOne(id);
+        return res.status(200).json(user);
     }
 
-    delete(req: Request, res: Response) {
-        const id: number = parseInt(req.params.id);
-        const result = this.userService.delete(id);
-        return res.status(200).json({ result });
+    async delete(req: Request, res: Response) {
+        const id: string = req.params.id;
+        const user = await this.userService.findOne(id);
+
+        if(!user) {
+            return res.status(404).json({message: 'User does not exist'});
+        }
+
+        const result = await this.userService.delete(id);
+        return res.status(200).json(result);
     }
 
-    update(req: Request, res: Response) {
-        const id: number = parseInt(req.params.id);
-        const body = req.body;
-        const email = body.email;
-        const password = body.password;
-        const user = new User(email,password);
+    async update(req: Request, res: Response) {
+        const id: string = req.params.id;
 
-        const result = this.userService.update(id, user);
-        return res.status(200).json({ result });
+        const user = await this.userService.findOne(id);
+
+        if(!user) {
+            return res.status(404).json({message: 'User does not exist'});
+        }
+
+        const userBody = req.body;
+        const userUpdated = await this.userService.update(id, userBody);
+        return res.status(200).json(userUpdated);
     }
 }
 

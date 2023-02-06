@@ -1,4 +1,15 @@
 import App  from './app';
+import * as dotenv from 'dotenv';
+import mongoose from 'mongoose';
+import MongoConnection from './db';
 
-const app: App = new App();
-app.listen(8080);
+(async () => {
+    dotenv.config();
+    /*await mongoose.connect(process.env.MONGODB_URI, ()=> {
+        console.log("Connected to mongodb");
+    });*/
+    const mongoConnection: MongoConnection = MongoConnection.getInstance();
+    console.log(mongoConnection.connection);
+    const app = new App();
+    app.listen(8080);
+})();
