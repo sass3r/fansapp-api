@@ -16,6 +16,8 @@ describe('Test user.route.ts', () => {
 
     test('Save User', async () => {
         const user = {
+            'fullName': 'Mario Baracus',
+            'nickName': 'baracus65',
             'email': 'baracus@gmail.com',
             'password': 'work3'
         }
