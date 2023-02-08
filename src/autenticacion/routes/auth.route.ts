@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import User from '../models/user';
 import { SharedMiddleware } from '../middlewares/shared.middleware';
+import { UserMiddleware } from '../middlewares/user.middleware';
 import { AuthController } from '../controllers/auth.controller';
 
 export class AuthRoute {
@@ -9,7 +10,8 @@ export class AuthRoute {
 
     constructor(
         private authController: AuthController,
-        private middleware: SharedMiddleware
+        private middleware: SharedMiddleware,
+        private userMiddleware: UserMiddleware
     ){
         this.router = Router();
         this.routes();
@@ -18,7 +20,8 @@ export class AuthRoute {
     routes() {
         this.router.post(
             '/api/login',
-            this.middleware.passAuth('login'), 
+            this.middleware.passAuth('login'),
+            (req, res, next) => [this.userMiddleware.loginValidator(req, res, next)],
             (req, res) => this.authController.login(req,res)
         );
     }

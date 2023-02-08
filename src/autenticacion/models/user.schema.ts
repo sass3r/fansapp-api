@@ -13,6 +13,20 @@ class UserSchema {
     private constructor() {
         dotenv.config();
         this.userSchema = new mongoose.Schema({
+            fullName: {
+                type: String,
+                required: true
+            },
+            nickName: {
+                type: String,
+                required: true,
+                index: {
+                    unique: true
+                }
+            },
+            foto: {
+                type: String,
+            },
             email: {
                 type: String,
                 required: true,
@@ -22,7 +36,7 @@ class UserSchema {
             },
             password: {
                 type: String,
-                required: true
+                required: true,
             }
         });
 
@@ -63,7 +77,12 @@ class UserSchema {
 
 
     async create(attr: UserInterface) {
-        return UserSchema.userModel.create(attr);
+        try {
+            const user: UserModel = await UserSchema.userModel.create(attr);
+            return user;
+        }catch(error){
+            console.log('campo duplicado');
+        }
     }
 }
 

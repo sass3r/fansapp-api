@@ -3,13 +3,11 @@ import UserSchema from "../models/user.schema";
 import { UserModel } from "../models/user.model";
 
 class UserService {
-    public users: never[];
 
     constructor(private userSchema: UserSchema) {}
 
     async getAll() {
-        this.users = await UserSchema.userModel.find();
-        return this.users;
+        return await UserSchema.userModel.find().select('-password');
     }
 
     async save(user: User) {
@@ -18,13 +16,11 @@ class UserService {
     }
 
     async findOne(id: string) {
-        const user = await UserSchema.userModel.findOne({_id: id});
-        return user;
+        return await UserSchema.userModel.findOne({_id: id}).select('-password');
     }
 
     async findByEmail(email: string) {
-        const user = await UserSchema.userModel.findOne({email: email});
-        return user;
+        return await UserSchema.userModel.findOne({email: email});
     }
 
     async delete(id: string) {

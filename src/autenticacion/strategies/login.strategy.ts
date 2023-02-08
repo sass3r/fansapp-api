@@ -17,6 +17,7 @@ export class LoginStrategy {
         if(!user) {
             return done(null, false, {message: 'Invalid email or password'});
         }
+        user.password = "";
 
         return done(null, user);
     }
